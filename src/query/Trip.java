@@ -4,9 +4,13 @@ public class Trip {
 	
 	private String origin;
 	private String destination;
-	private double travelTime;
+	private String travelTime;
 	
-	public Trip(String origin, String destination, double travelTime){
+	public Trip(){
+		
+	}
+	
+	public Trip(String origin, String destination, String travelTime){
 		this.origin = origin;
 		this.destination = destination;
 		this.travelTime = travelTime;
@@ -28,11 +32,11 @@ public class Trip {
 		this.destination = destination;
 	}
 
-	public double getTravelTime() {
+	public String getTravelTime() {
 		return travelTime;
 	}
 
-	public void setTravelTime(double travelTime) {
+	public void setTravelTime(String travelTime) {
 		this.travelTime = travelTime;
 	}
 	

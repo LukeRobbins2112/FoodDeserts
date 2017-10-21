@@ -23,7 +23,7 @@ public class LocationFileLoader{
     
     
 	//Location <name, location>
-    public static HashMap<String, Trip> loadLocationXML(String xmlString){
+    public static Trip loadLocationXML(String xmlString){
         
         NodeList entries;
 
@@ -39,14 +39,17 @@ public class LocationFileLoader{
 
             Document doc = db.parse(new InputSource( new StringReader( xmlString ) ));
             doc.getDocumentElement().normalize();
-            entries = doc.getDocumentElement().getChildNodes();
-
+            //entries = doc.getDocumentElement().getChildNodes();
+            entries = doc.getElementsByTagName("DistanceMatrixResponse");
+            
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
             return null;
         }
 
         HashMap<String, Trip> trips = new HashMap<>();  // Create a temporary collection to store objects (i.e., a HashMap<String, Employee>)
+        
+        Trip trip = new Trip();
         
         try{
             // Parse the individual records from the XML file 
@@ -57,7 +60,7 @@ public class LocationFileLoader{
 
                 String entryName = entries.item(i).getNodeName();
 
-                //Checks to make sure each node is actually a Location
+                //Checks to make sure each node is actually a distance matrix response
 
                 if (!entryName.equals("DistanceMatrixResponse")) {
                     System.err.println("Unexpected node found: " + entryName);
@@ -72,12 +75,11 @@ public class LocationFileLoader{
                 
                 String origin = elem.getElementsByTagName("origin_address").item(0).getTextContent();
                 String destination = elem.getElementsByTagName("destination_address").item(0).getTextContent();
-                int tripDuration = Integer.parseInt(elem.getElementsByTagName("duration").item(0).getTextContent());
+                String tripDur = elem.getElementsByTagName("duration").item(0).getTextContent();
+                tripDur = tripDur.substring(4); 
+                //double tripDuration = Double.parseDouble(tripDur);
                 
-
-                // Create the domain object and add to temporary collection, then return collection
-                //Video vid = new VideoImpl(name, duration, rating, fName);
-                Trip trip = new Trip(origin, destination, tripDuration);
+                trip = new Trip(origin, destination, tripDur);
                 
                 trips.put(origin, trip);
             }
@@ -86,7 +88,7 @@ public class LocationFileLoader{
             return null;
         }
         
-        return trips;
+        return trip;
         
         
     }

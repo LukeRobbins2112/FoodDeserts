@@ -21,7 +21,7 @@ public class GoogleMatrixRequest {
     return response.body().string();
   }
 
-  public static String googleTripResults() throws IOException {
+  public String googleTripResults() throws IOException {
 	  
     GoogleMatrixRequest request = new GoogleMatrixRequest();
     String originLatLong = "41.8885198,-87.6354482";
@@ -33,6 +33,7 @@ public class GoogleMatrixRequest {
     		+ "&key=" + API_KEY;
 
     String response = request.run(url_request);
+    System.out.println(response);
    	return response;
   }
 }
