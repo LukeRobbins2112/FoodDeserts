@@ -2,6 +2,7 @@ package query;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
@@ -11,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -21,7 +23,7 @@ public class LocationFileLoader{
     
     
 	//Location <name, location>
-    public static HashMap<String,Integer> loadLocationXML(String fileName){
+    public static HashMap<String, Trip> loadLocationXML(String xmlString){
         
         NodeList entries;
 
@@ -29,13 +31,13 @@ public class LocationFileLoader{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-            File xmlFile = new File(fileName);
+           /* File xmlFile = new File(fileName);
             if (!xmlFile.exists()) {
                 System.err.println("**** XML File '" + fileName + "' cannot be found");
                 System.exit(-1);
-            }
+            }*/
 
-            Document doc = db.parse(xmlFile);
+            Document doc = db.parse(new InputSource( new StringReader( xmlString ) ));
             doc.getDocumentElement().normalize();
             entries = doc.getDocumentElement().getChildNodes();
 
@@ -44,7 +46,7 @@ public class LocationFileLoader{
             return null;
         }
 
-        HashMap<String, Integer> locations = new HashMap<>();  // Create a temporary collection to store objects (i.e., a HashMap<String, Employee>)
+        HashMap<String, Trip> trips = new HashMap<>();  // Create a temporary collection to store objects (i.e., a HashMap<String, Employee>)
         
         try{
             // Parse the individual records from the XML file 
@@ -57,28 +59,34 @@ public class LocationFileLoader{
 
                 //Checks to make sure each node is actually a Location
 
-                if (!entryName.equals("Location")) {
+                if (!entryName.equals("DistanceMatrixResponse")) {
                     System.err.println("Unexpected node found: " + entryName);
                     continue;
                 }
 
                 // Get all named nodes
                 Element elem = (Element) entries.item(i);
-                String name = elem.getElementsByTagName("Name").item(0).getTextContent();
-                int duration = Integer.parseInt(elem.getElementsByTagName("Duration").item(0).getTextContent());
-                Rating rating = Rating.valueOf(elem.getElementsByTagName("Rating").item(0).getTextContent());
-                String fName = elem.getElementsByTagName("FileName").item(0).getTextContent();
+               // String name = elem.getElementsByTagName("Name").item(0).getTextContent();
+                // Rating rating = Rating.valueOf(elem.getElementsByTagName("Rating").item(0).getTextContent());
+                
+                
+                String origin = elem.getElementsByTagName("origin_address").item(0).getTextContent();
+                String destination = elem.getElementsByTagName("destination_address").item(0).getTextContent();
+                int tripDuration = Integer.parseInt(elem.getElementsByTagName("duration").item(0).getTextContent());
+                
 
                 // Create the domain object and add to temporary collection, then return collection
-                Video vid = new VideoImpl(name, duration, rating, fName);
-                videos.put(name, vid);
+                //Video vid = new VideoImpl(name, duration, rating, fName);
+                Trip trip = new Trip(origin, destination, tripDuration);
+                
+                trips.put(origin, trip);
             }
         } catch(InvalidParameterException e){
             System.out.println(e.getMessage());
             return null;
         }
         
-        return videos;
+        return trips;
         
         
     }
