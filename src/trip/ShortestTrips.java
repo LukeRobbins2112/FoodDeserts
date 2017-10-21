@@ -20,7 +20,7 @@ public class ShortestTrips {
 	
 	//returns the trip to the closest Aldi for each DesertLocation
 	
-	public HashMap<String, Trip> shortTrips() throws IOException{
+	public static HashMap<String, Trip> getList() throws IOException{
 		
 	    
 		/*HashMap<String, GroceryStore> stores = new HashMap<String, GroceryStore>();				//test approach, XML for actual
@@ -32,7 +32,7 @@ public class ShortestTrips {
 		stores.put("aldi3", aldi3);*/
 		
 		
-	    HashMap<String, DesertArea> desertNodes = DesertLocationLoader.loadDesertXML("DesertLocations.xml");
+	    HashMap<String, DesertArea> desertNodes = DesertLocationLoader.loadDesertXML("FoodDeserts.xml");
 	    HashMap<String, GroceryStore> storeNodes = GroceryStoreLoader.loadStoreXML("GroceryStores.xml");
 	    HashMap<String, Trip> trips = new HashMap<String, Trip>();
 		GoogleMatrixRequest request = new GoogleMatrixRequest();

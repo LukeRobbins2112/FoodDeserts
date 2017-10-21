@@ -12,9 +12,9 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		
-		ShortestTrips sts = new ShortestTrips();
+		//ShortestTrips sts = new ShortestTrips();
 		
-		HashMap<String, Trip> trips = sts.shortTrips();
+		HashMap<String, Trip> trips = ShortestTrips.getList();
 		TripOperations op = new TripOperations(trips);
 		
 		System.out.println(op.averageTripTime());
