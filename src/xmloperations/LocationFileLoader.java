@@ -1,4 +1,4 @@
-package query;
+package xmloperations;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import trip.Trip;
 
 /**
  *
@@ -31,12 +33,6 @@ public class LocationFileLoader{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-           /* File xmlFile = new File(fileName);
-            if (!xmlFile.exists()) {
-                System.err.println("**** XML File '" + fileName + "' cannot be found");
-                System.exit(-1);
-            }*/
-
             Document doc = db.parse(new InputSource( new StringReader( xmlString ) ));
             doc.getDocumentElement().normalize();
             //entries = doc.getDocumentElement().getChildNodes();
@@ -46,8 +42,6 @@ public class LocationFileLoader{
             e.printStackTrace();
             return null;
         }
-
-        HashMap<String, Trip> trips = new HashMap<>();  // Create a temporary collection to store objects (i.e., a HashMap<String, Employee>)
         
         Trip trip = new Trip();
         
@@ -76,12 +70,14 @@ public class LocationFileLoader{
                 String origin = elem.getElementsByTagName("origin_address").item(0).getTextContent();
                 String destination = elem.getElementsByTagName("destination_address").item(0).getTextContent();
                 String tripDur = elem.getElementsByTagName("duration").item(0).getTextContent();
-                tripDur = tripDur.substring(4); 
-                //double tripDuration = Double.parseDouble(tripDur);
+                tripDur = tripDur.replaceAll("[\\D]", "");
                 
-                trip = new Trip(origin, destination, tripDur);
+                //careful when debugging! makes new request each time so can vary
+                double tripDuration = Double.parseDouble(tripDur) / 6000; 		//centiseconds to minutes
                 
-                trips.put(origin, trip);
+                
+                trip = new Trip(origin, destination, tripDuration);
+                
             }
         } catch(InvalidParameterException e){
             System.out.println(e.getMessage());

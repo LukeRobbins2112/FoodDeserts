@@ -1,16 +1,16 @@
-package query;
+package trip;
 
 public class Trip {
 	
 	private String origin;
 	private String destination;
-	private String travelTime;
+	private double travelTime;
 	
 	public Trip(){
 		
 	}
 	
-	public Trip(String origin, String destination, String travelTime){
+	public Trip(String origin, String destination, double travelTime){
 		this.origin = origin;
 		this.destination = destination;
 		this.travelTime = travelTime;
@@ -32,11 +32,11 @@ public class Trip {
 		this.destination = destination;
 	}
 
-	public String getTravelTime() {
+	public double getTravelTime() {
 		return travelTime;
 	}
 
-	public void setTravelTime(String travelTime) {
+	public void setTravelTime(double travelTime) {
 		this.travelTime = travelTime;
 	}
 	
